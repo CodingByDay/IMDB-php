@@ -1,0 +1,191 @@
+CREATE TABLE users
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  first_name Varchar(200) NOT NULL,
+  last_name Varchar(200) NOT NULL,
+  email Varchar(200) NOT NULL,
+  pass Varchar(255) NOT NULL,
+  avatar Varchar(255),
+  admin Int NOT NULL DEFAULT 0,
+  last_ip Varchar(200),
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+ALTER TABLE users ADD UNIQUE email (email)
+;
+
+CREATE TABLE movies
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  title Varchar(200) NOT NULL,
+  description Text,
+  duration Int,
+  year_release Int,
+  rate Float,
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  user_id Int,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship5 ON movies (user_id)
+;
+
+CREATE TABLE multimedia
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  url Varchar(255) NOT NULL,
+  title Varchar(200),
+  type Varchar(200) NOT NULL DEFAULT 'img',
+  date_add Timestamp NOT NULL,
+  movie_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship1 ON multimedia (movie_id)
+;
+
+CREATE TABLE genres
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  title Varchar(200) NOT NULL,
+  short Varchar(20),
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE TABLE genres_movies
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  date_add Timestamp NOT NULL,
+  genre_id Int NOT NULL,
+  movie_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship2 ON genres_movies (genre_id)
+;
+
+CREATE INDEX IX_Relationship4 ON genres_movies (movie_id)
+;
+
+CREATE TABLE actors
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  first_name Varchar(200) NOT NULL,
+  last_name Varchar(200) NOT NULL,
+  nick Varchar(200),
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE TABLE roles
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  role Varchar(200),
+  description Text,
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  movie_id Int NOT NULL,
+  actor_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship6 ON roles (movie_id)
+;
+
+CREATE INDEX IX_Relationship7 ON roles (actor_id)
+;
+
+CREATE TABLE actors_images
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  title Varchar(200),
+  url Varchar(255) NOT NULL,
+  date_add Timestamp NOT NULL,
+  actor_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship8 ON actors_images (actor_id)
+;
+
+CREATE TABLE comments
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  content Text NOT NULL,
+  date_add Timestamp NOT NULL,
+  date_modify Timestamp NOT NULL,
+  user_id Int NOT NULL,
+  movie_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship9 ON comments (user_id)
+;
+
+CREATE INDEX IX_Relationship10 ON comments (movie_id)
+;
+
+CREATE TABLE rates
+(
+  id Int NOT NULL AUTO_INCREMENT,
+  rate Int NOT NULL,
+  date_add Timestamp NOT NULL,
+  user_id Int NOT NULL,
+  movie_id Int NOT NULL,
+  PRIMARY KEY (id)
+)
+;
+
+CREATE INDEX IX_Relationship11 ON rates (user_id)
+;
+
+CREATE INDEX IX_Relationship12 ON rates (movie_id)
+;
+
+ALTER TABLE multimedia ADD CONSTRAINT Relationship1 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE genres_movies ADD CONSTRAINT Relationship2 FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE genres_movies ADD CONSTRAINT Relationship4 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE movies ADD CONSTRAINT Relationship5 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE roles ADD CONSTRAINT Relationship6 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE roles ADD CONSTRAINT Relationship7 FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE actors_images ADD CONSTRAINT Relationship8 FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE comments ADD CONSTRAINT Relationship9 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE comments ADD CONSTRAINT Relationship10 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE rates ADD CONSTRAINT Relationship11 FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
+
+ALTER TABLE rates ADD CONSTRAINT Relationship12 FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE RESTRICT ON UPDATE RESTRICT
+;
